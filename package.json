@@ -1,0 +1,19 @@
+{
+  "name": "birdy",
+  "version": "1.0.0",
+  "description": "Twitter data saver based on geolocation",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JohnPhamous/birdy.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/JohnPhamous/birdy/issues"
+  },
+  "homepage": "https://github.com/JohnPhamous/birdy#readme"
+}
