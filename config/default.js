@@ -6,5 +6,5 @@ module.exports = {
     access_token_secret: ''
   },
   dataDir: 'data',
-  requestLimit: 10
+  requestLimit: 10 // Maximum number of concurrent requests
 }

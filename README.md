@@ -2,16 +2,16 @@
 
 > A script to save geotagged tweets
 
-# Set Up
+## Set Up
 
-You will need to create a Twitter app to authenticate with Twitter via OAuth to get the tweets. Create `twitterAuth.js` under `/config` with your information:
+To run the script, first `cd` into the project directory and install the required modules with:
+    
+    npm install
 
-```
-module.exports = {
-    consumer_key: '',
-    consumer_secret: '',
-    access_token: '',
-    access_token_secret: ''
-}
+Then, you will need to create a Twitter app to authenticate with Twitter via OAuth to get the tweets. Update `config/default.js` with your information.
 
-```
+Finally, start the application with:
+
+    npm start
+
+To view debugging logs, set the `DEBUG` environmental variable to `birdy`.
