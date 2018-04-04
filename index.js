@@ -50,7 +50,7 @@ function getOutputFilename () {
  */
 async function grabLinkData (tweet) {
   if (pendingRequests >= config.get('requestLimit')) {
-    if(pendingRequests > 100) console.log('Warning: Request queue too large at size', pendingRequests)
+    if(pendingRequests > 100) console.log('Warning: Request queue too large; at size:', pendingRequests)
     // If there are too many pending requests, add it to the queue
     pendingQueue.push(tweet)
     return
@@ -79,7 +79,9 @@ async function grabLinkData (tweet) {
     // If we can't get the tweet's link, log it and ignore it,
     //  since the site probably doesn't like automated scrapers.
     console.error('Failed to get tweet: ', tweet.id, tweet.text)
-    console.error(err.name, err.message)
+    console.error(err.name)
+    // Print error message and truncate it if it is too long
+    console.error(err.message.length > 150 ? err.message.substring(0, 147) + '...' : err.message)
   }
 }
 
