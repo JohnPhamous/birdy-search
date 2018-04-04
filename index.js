@@ -51,7 +51,7 @@ function getOutputFilename () {
  */
 async function grabLinkData (tweet) {
   if (pendingRequests >= config.get('requestLimit')) {
-    if (pendingRequests > 100) console.log('Warning: Request queue too large; at size:', pendingRequests)
+    if (pendingQueue.length > 100) console.log('Warning: Request queue too large; at size:', pendingQueue.length)
     // If there are too many pending requests, add it to the queue
     pendingQueue.push(tweet)
     return
