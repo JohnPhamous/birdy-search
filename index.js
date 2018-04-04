@@ -1,5 +1,6 @@
 const fs = require('fs')
 const path = require('path')
+const debug = require('debug')('birdy')
 const Twit = require('twit')
 const config = require('config')
 const rp = require('request-promise')
@@ -7,16 +8,28 @@ const cheerio = require('cheerio')
 const { fork } = require('child_process')
 
 const T = new Twit(config.get('twitter'))
-const tweetProcessor = fork(`${__dirname}/lib/tweetProcessor.js`)
 
-const linkRegex = /https?:\/\/[\-a-zA-Z\.?0-9@:%._\+~#=\/&]+/
-let fileNumber = 0
-let outputFile = fs.createWriteStream(getOutputFilename())
 const pendingQueue = []
+let fileNumber = 0
+const linkRegex = /https?:\/\/[\-a-zA-Z\.?0-9@:%._\+~#=\/&]+/
 let pendingRequests = 0
 let writeSize = 0
 
-function getOutputFilename() {
+try {
+  while (fs.statSync(getOutputFilename())) {
+    fileNumber++
+  }
+} catch (err) {
+  if (err.code === 'ENOENT') {
+    console.log('Set output file to', getOutputFilename())
+  } else {
+    debug('Unknown error:', err)
+  }
+}
+
+let outputFile = fs.createWriteStream(getOutputFilename())
+
+function getOutputFilename () {
   return path.join(config.get('dataDir'), `tweets-${fileNumber}.json`)
 }
 
@@ -25,26 +38,31 @@ async function grabLinkData (tweet) {
     pendingQueue.push(tweet)
     return
   }
-  const link = linkRegex.exec(tweet.text)[0]
-  console.log('Got link:', link)
-  const res = await rp.get(link)
-  const $ = cheerio.load(res)
-  const title = $('title').text()
-  console.log('Got title: ', title)
-  tweet.title = title
-  writeToFile(tweet)
-  pendingRequests--
-  if(pendingQueue.length > 0) {
-    grabLinkData(pendingQueue.pop())
+  try {
+    const link = linkRegex.exec(tweet.text)[0]
+    debug('Got link:', link)
+    const res = await rp.get(link)
+    const $ = cheerio.load(res)
+    const title = $('title').text()
+    debug('Got title: ', title)
+    tweet.title = title
+    writeToFile(tweet)
+    pendingRequests--
+    if (pendingQueue.length > 0) {
+      setImmediate(() => grabLinkData(pendingQueue.pop()))
+    }
+  } catch (err) {
+    console.error('Failed to get tweet: ', tweet.id, tweet.text)
+    console.error(err)
   }
 }
 
-function writeToFile(tweet) {
+function writeToFile (tweet) {
   const tweetString = JSON.stringify(tweet) + '\n'
   writeSize += tweetString.length
   outputFile.write(tweetString)
-  console.log('Output buffer size:', writeSize)
-  if(writeSize > 10000000) {
+  debug('Output buffer size:', writeSize)
+  if (writeSize > 10000000) {
     writeSize = 0
     outputFile.close()
     fileNumber++
@@ -52,9 +70,7 @@ function writeToFile(tweet) {
   }
 }
 
-const sanFrancisco = [ '-122.75', '36.8', '-121.75', '37.8' ]
-
-const stream = T.stream('statuses/filter', { locations: sanFrancisco, tweet_mode: 'extended' })
+const stream = T.stream('statuses/sample', { tweet_mode: 'extended' })
 console.log('Starting Twitter Streaming API')
 
 stream.on('tweet', (tweet) => {
@@ -64,9 +80,3 @@ stream.on('tweet', (tweet) => {
     writeToFile(tweet)
   }
 })
-
-// let stream = T.stream('statuses/sample')
-
-// stream.on('tweet', function (tweet) {
-//   console.log(tweet)
-// })
