@@ -1,2 +1,4 @@
-config/twitterAuth.js
+config/*
+!config/default.js
 node_modules
+data/*.json
