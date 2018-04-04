@@ -15,6 +15,7 @@ const pendingQueue = [] // queue for tweets that need to get links fetched
 let fileNumber = 0 // number of output files, used in file name
 let pendingRequests = 0 // number of pending requests (used to limit # of requests)
 let writeSize = 0 // number of characters that have been written to the current file
+let totalSize = 0 // total number of characters written
 const linkRegex = /https?:\/\/[-a-zA-Z.?0-9@:%._+~#=/&]+/ // A regex used to find links
 
 // Find the last file number to make sure we don't accidentally overwrite previously saved data
@@ -50,7 +51,7 @@ function getOutputFilename () {
  */
 async function grabLinkData (tweet) {
   if (pendingRequests >= config.get('requestLimit')) {
-    if(pendingRequests > 100) console.log('Warning: Request queue too large; at size:', pendingRequests)
+    if (pendingRequests > 100) console.log('Warning: Request queue too large; at size:', pendingRequests)
     // If there are too many pending requests, add it to the queue
     pendingQueue.push(tweet)
     return
@@ -94,17 +95,22 @@ function writeToFile (tweet) {
   // Convert the tweet to JSON
   const tweetString = JSON.stringify(tweet) + '\n'
   writeSize += tweetString.length
+  totalSize += tweetString.length
   outputFile.write(tweetString)
   debug('Output buffer size:', writeSize)
 
-  // Check if the number of characters exceeds the limit of 10000000,
-  //  which is equal to ~10 MB of text
-  if (writeSize > 10000000) {
+  // Check if the number of characters exceeds the file character size limit
+  //  which, by default, is equal to ~10 MB of text
+  if (writeSize > config.get('fileSizeLimit') || totalSize >= config.get('totalSizeLimit')) {
     writeSize = 0
     outputFile.close()
     // Rotate file streams to the next one
     fileNumber++
     outputFile = fs.createWriteStream(getOutputFilename())
+    if (totalSize >= config.get('totalSizeLimit')) {
+      console.log('Reached the total size limit. Exiting...')
+      process.exit(0)
+    }
   }
 }
 

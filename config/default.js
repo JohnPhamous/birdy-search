@@ -6,5 +6,10 @@ module.exports = {
     access_token_secret: ''
   },
   dataDir: 'data',
-  requestLimit: 10 // Maximum number of concurrent requests
+  requestLimit: 10, // Max number of concurrent requests
+
+  // Max number of characters to store in a single file. 10000000 characters ~= 10 MB
+  fileSizeLimit: 10000000,
+  // Max number of characters to store overall. 10000000 * 750 character ~= 7.5 GB
+  totalSizeLimit: 10000000 * 750
 }
