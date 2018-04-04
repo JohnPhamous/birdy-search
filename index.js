@@ -114,8 +114,12 @@ function writeToFile (tweet) {
   }
 }
 
+// Creating a bounding box for the world
+// We want to gather all geotagged tweets
+const world = ['-180', '-90', '180', '90']
+//const world = [ '-122.75', '36.8', '-121.75', '37.8' ]
 // Create the tweet stream
-const tweetStream = T.stream('statuses/sample', { tweet_mode: 'extended' })
+const tweetStream = T.stream('statuses/filter', { locations: world })
 console.log('Starting Twitter Streaming API')
 
 tweetStream.on('tweet', (tweet) => {
