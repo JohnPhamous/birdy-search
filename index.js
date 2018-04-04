@@ -5,15 +5,14 @@ const Twit = require('twit')
 const config = require('config')
 const rp = require('request-promise')
 const cheerio = require('cheerio')
-const { fork } = require('child_process')
 
 const T = new Twit(config.get('twitter'))
 
 const pendingQueue = []
 let fileNumber = 0
-const linkRegex = /https?:\/\/[\-a-zA-Z\.?0-9@:%._\+~#=\/&]+/
 let pendingRequests = 0
 let writeSize = 0
+const linkRegex = /https?:\/\/[-a-zA-Z.?0-9@:%._+~#=/&]+/
 
 try {
   while (fs.statSync(getOutputFilename())) {
