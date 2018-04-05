@@ -14,11 +14,17 @@ export default {
 <style>
 html,
 body {
-    background: rgb(29, 35, 56);
+    background: rgb(253, 103, 169);
     background: linear-gradient(
         45deg,
-        rgba(77, 94, 144, 1) 0% rgba(29, 35, 56, 1) 100%
+        rgba(253, 103, 169, 1) 0%,
+        rgba(147, 186, 254, 1) 100%
     );
     color: white;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS',
+        sans-serif;
+    height: 100%;
+    width: 100%;
+    margin: 0;
 }
 </style>
