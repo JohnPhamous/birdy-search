@@ -5,6 +5,10 @@ module.exports = {
     access_token: '',
     access_token_secret: ''
   },
+  requestSettings: {
+    timeout: 5000,
+    maxRedirects: 5
+  },
   dataDir: 'data',
   requestLimit: 10, // Max number of concurrent requests
 
