@@ -3,10 +3,13 @@
     <div class="card">
       <div class="card-content">
         <h1>Birdy Search</h1>
-        <form v-on:submit.prevent="submitQuery">
+
+        <form v-on:submit.prevent="submitQuery" v-if="!isLoading">
           <input type="text" v-model="query" placeholder="Twitter Search Query" />
           <button class="btn">Look Up</button>
         </form>
+
+        <loading-icon v-if="isLoading" />
       </div>
     </div>
   </div>
@@ -15,20 +18,24 @@
 <script>
 import axios from 'axios'
 import ResultList from './ResultList'
+import LoadingIcon from './LoadingIcon'
 
 export default {
   data: function() {
     return {
-      query: ''
+      query: '',
+      isLoading: false
     }
   },
   methods: {
     submitQuery: function() {
       console.log('Submitting Query', this.query)
+      this.isLoading = true
     }
   },
   components: {
-    ResultList
+    ResultList,
+    LoadingIcon
   }
 }
 </script>
@@ -43,15 +50,18 @@ export default {
   justify-content: center;
   padding: 50px 100px;
   align-items: center;
+  opacity: 0.8;
 }
 .search-bar {
   text-align: center;
   display: flex;
   height: 100%;
   align-items: center;
+  position: absolute;
+  width: 100%;
 }
 .search-bar input[type='text'] {
-  width: 50vw;
+  width: 30vw;
   background: white;
   border: none;
   border-radius: 10px;

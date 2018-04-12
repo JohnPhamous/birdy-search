@@ -1,16 +1,19 @@
 <template>
   <div id="app">
     <Home />
+    <particles />
   </div>
 </template>
 
 <script>
 import Home from './components/Home'
+import Particles from './components/Particles'
 
 export default {
   name: 'App',
   components: {
-    Home
+    Home,
+    Particles
   }
 }
 </script>
