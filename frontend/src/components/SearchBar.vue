@@ -6,7 +6,7 @@
 
         <form v-on:submit.prevent="submitQuery" v-if="!isLoading">
           <input type="text" v-model="query" placeholder="Twitter Search Query" />
-          <button class="btn">Look Up</button>
+          <b-button>Look Up</b-button>
         </form>
 
         <loading-icon v-if="isLoading" />
@@ -19,6 +19,7 @@
 import axios from 'axios'
 import ResultList from './ResultList'
 import LoadingIcon from './LoadingIcon'
+import BButton from './includes/BButton'
 
 export default {
   data: function() {
@@ -29,13 +30,13 @@ export default {
   },
   methods: {
     submitQuery: function() {
-      console.log('Submitting Query', this.query)
       this.isLoading = true
     }
   },
   components: {
     ResultList,
-    LoadingIcon
+    LoadingIcon,
+    BButton
   }
 }
 </script>
@@ -70,33 +71,5 @@ export default {
   font-size: 20px;
   padding: 10px 20px;
   font-weight: 800;
-}
-.search-bar button {
-  height: 50px;
-  font-size: 20px;
-  font-weight: 800;
-  border-radius: 10px;
-  padding: 10px 20px;
-  border: none;
-  cursor: pointer;
-}
-.btn {
-  flex: 1 1 auto;
-  margin: 10px;
-  padding: 30px;
-  text-align: center;
-  text-transform: uppercase;
-  transition: 0.5s;
-  background-size: 200% auto;
-  color: white;
-  background-image: linear-gradient(
-    to right,
-    rgb(133, 138, 243) 0%,
-    rgb(193, 73, 236) 51%,
-    rgb(238, 96, 190) 100%
-  );
-}
-.btn:hover {
-  background-position: right center; /* change the direction of the change here */
 }
 </style>

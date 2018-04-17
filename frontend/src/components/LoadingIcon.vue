@@ -1,22 +1,26 @@
 <template>
-  <circle5 />
+  <div>
+    <circle5 />
+    <b-button>Cancel</b-button>
+  </div>
 </template>
 
 <script>
 import { Circle5 } from 'vue-loading-spinner'
+import BButton from './includes/BButton'
+
 export default {
   components: {
-    Circle5
+    Circle5,
+    BButton
   }
 }
 </script>
 
 <style scoped>
 .spinner {
-  margin-top: 20px;
+  margin: 20px auto;
   overflow: inherit !important;
   display: block;
-  margin-left: auto;
-  margin-right: auto;
 }
 </style>
