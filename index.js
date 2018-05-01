@@ -78,16 +78,24 @@ function writeToFile (tweet) {
 
   // Check if the number of characters exceeds the file character size limit
   //  which, by default, is equal to ~10 MB of text
+  let totalSizeLimit = 0
+  if (argv.totalsize) {
+    totalSizeLimit = argv.totalsize
+  }
+  else {
+    totalSizeLimit = config.get('totalSizeLimit')
+  }
+
   if (
     writeSize > config.get('fileSizeLimit') ||
-        totalSize >= config.get('totalSizeLimit')
+        totalSize >= totalSizeLimit 
   ) {
     writeSize = 0
     outputFile.close()
     // Rotate file streams to the next one
     fileNumber++
     outputFile = fs.createWriteStream(getOutputFilename())
-    if (totalSize >= config.get('totalSizeLimit')) {
+    if (totalSize >= totalSizeLimit) {
       console.log('Reached the total size limit. Exiting...')
       process.exit(0)
     }
