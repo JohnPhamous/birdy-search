@@ -4,6 +4,7 @@ const path = require('path')
 const debug = require('debug')('birdy:main')
 const Twit = require('twit')
 const config = require('config')
+const argv = require('yargs').argv
 const { fork } = require('child_process')
 
 const workers = []
@@ -50,6 +51,15 @@ let outputFile = fs.createWriteStream(getOutputFilename())
  * @return   {String}  The output file path
  */
 function getOutputFilename () {
+  if (argv.dir) {
+    if (!fs.existsSync(argv.dir)) {
+      fs.mkdirSync(argv.dir)
+    }
+    return path.join(argv.dir, `tweets-${fileNumber}.json`)
+  }
+  if (!fs.existsSync(config.get('dataDir'))) {
+    fs.mkdirSync(config.get('dataDir'))
+  }
   return path.join(config.get('dataDir'), `tweets-${fileNumber}.json`)
 }
 
