@@ -65,5 +65,6 @@ public class LuceneWrapper {
     public static void printTweetDocument(Document tweet) {
         System.out.println("id: " + tweet.get("id"));
         System.out.println("text: " + tweet.get("text"));
+        System.out.println("title: " + tweet.get("title"));
     }
 }
