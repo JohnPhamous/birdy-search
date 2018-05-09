@@ -20,35 +20,35 @@ public class Main {
         LuceneWrapper lc = new LuceneWrapper(indexDir);
 
         if(indexDir.isDirectory() && indexDir.listFiles().length == 0) {
-            IndexWriter iw = lc.createIndexWriter();
-
-            for(File f : dataDir.listFiles()) {
-                String fileName = f.getName();
-                if(!fileName.substring(fileName.lastIndexOf(".") + 1).equals("json"))
-                    continue;
-                System.out.println("Processing: " + f.getName());
-                addTweetsFromFile(lc, iw, f);
+            try(IndexWriter iw = lc.createIndexWriter()) {
+                for(File f : dataDir.listFiles()) {
+                    String fileName = f.getName();
+                    if(!fileName.substring(fileName.lastIndexOf(".") + 1).equals("json"))
+                        continue;
+                    System.out.println("Processing: " + f.getName());
+                    addTweetsFromFile(lc, iw, f);
+                }
             }
-            iw.close();
         } else {
             System.out.println("Using existing index.");
         }
 
-        IndexReader ir = lc.createIndexReader();
         Scanner s = new Scanner(System.in);
-        while(true) {
-            System.out.print("Enter a query: ");
-            try {
-                String qs = s.nextLine();
-                if(qs.isEmpty()) break;
-                List<Document> res = lc.search(ir, qs, 10);
-                for(int i = 0; i < res.size(); ++i) {
-                    System.out.println("====== Result #" + (i + 1) + " ======");
-                    LuceneWrapper.printTweetDocument(res.get(i));
+        try(IndexReader ir = lc.createIndexReader()) {
+            while(true) {
+                System.out.print("Enter a query: ");
+                try {
+                    String qs = s.nextLine();
+                    if(qs.isEmpty()) break;
+                    List<Document> res = lc.search(ir, qs, 10);
+                    for(int i = 0; i < res.size(); ++i) {
+                        System.out.println("====== Result #" + (i + 1) + " ======");
+                        LuceneWrapper.printTweetDocument(res.get(i));
+                    }
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                    System.out.println("Invalid query.");
                 }
-            } catch (ParseException e) {
-                e.printStackTrace();
-                System.out.println("Invalid query.");
             }
         }
     }
