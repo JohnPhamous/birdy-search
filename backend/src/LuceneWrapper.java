@@ -13,9 +13,12 @@ import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.Directory;
+import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.store.RAMDirectory;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,9 +27,9 @@ public class LuceneWrapper {
     protected Directory index;
     protected IndexWriterConfig config;
 
-    public LuceneWrapper() {
+    public LuceneWrapper(File indexDir) throws IOException {
         analyzer = new StandardAnalyzer();
-        index = new RAMDirectory();
+        index = FSDirectory.open(indexDir.toPath());
         config = new IndexWriterConfig(analyzer);
     }
 

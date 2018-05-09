@@ -1,36 +1,41 @@
+import com.google.gson.JsonSyntaxException;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.search.ScoreDoc;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.util.List;
 import java.util.Scanner;
 
 public class Main {
 
     public static void main(String[] args) throws IOException {
-        File f = new File("data/tweets-0.json");
-        Scanner s = new Scanner(f);
+        File dataDir = new File("data");
+        File indexDir = new File("index");
 
-        LuceneWrapper lc = new LuceneWrapper();
-        IndexWriter iw = lc.createIndexWriter();
+        if(!indexDir.exists())
+            indexDir.mkdir();
+        LuceneWrapper lc = new LuceneWrapper(indexDir);
 
-        while(s.hasNextLine()) {
-            String tweetStr = s.nextLine();
-            Tweet t = Tweet.parseTweet(tweetStr);
-            lc.addTweet(iw, t);
-//            System.out.println(tweetStr);
-//            System.out.println(Tweet.parseTweet(tweetStr));
+        if(indexDir.isDirectory() && indexDir.listFiles().length == 0) {
+            IndexWriter iw = lc.createIndexWriter();
+
+            for(File f : dataDir.listFiles()) {
+                String fileName = f.getName();
+                if(!fileName.substring(fileName.lastIndexOf(".") + 1).equals("json"))
+                    continue;
+                System.out.println("Processing: " + f.getName());
+                addTweetsFromFile(lc, iw, f);
+            }
+            iw.close();
+        } else {
+            System.out.println("Using existing index.");
         }
-        iw.close();
-        s.close();
 
         IndexReader ir = lc.createIndexReader();
-        s = new Scanner(System.in);
+        Scanner s = new Scanner(System.in);
         while(true) {
             System.out.print("Enter a query: ");
             try {
@@ -44,6 +49,21 @@ public class Main {
             } catch (ParseException e) {
                 e.printStackTrace();
                 System.out.println("Invalid query.");
+            }
+        }
+    }
+
+    public static void addTweetsFromFile(LuceneWrapper lw, IndexWriter iw, File f) throws IOException {
+        try(BufferedReader br = new BufferedReader(new FileReader(f))) {
+            int line = 0;
+            for(String tweetStr; (tweetStr = br.readLine()) != null; line++) {
+                try {
+                    Tweet t = Tweet.parseTweet(tweetStr);
+                    lw.addTweet(iw, t);
+                } catch(JsonSyntaxException e) {
+                    System.out.println("Failed to parse tweet #" + line + ": " + tweetStr);
+                    e.printStackTrace();
+                }
             }
         }
     }
