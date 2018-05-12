@@ -1,14 +1,13 @@
 public class Coordinates {
-    String type;
-    double[] coordinates;
+    public double lat;
+    public double lng;
+
+    public Coordinates(double lat, double lng) {
+        this.lat = lat;
+        this.lng = lng;
+    }
 
     public String toString() {
-        StringBuilder s = new StringBuilder();
-        s.append("Coordinates (" + type + "): <");
-        for(double item : coordinates) {
-            s.append(item + ", ");
-        }
-        s.append(">");
-        return s.toString();
+        return "<Point: (" + lat + ", " + lng + ")>";
     }
 }

@@ -1,7 +1,6 @@
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
-import org.apache.lucene.document.Document;
-import org.apache.lucene.document.StringField;
-import org.apache.lucene.document.TextField;
+import org.apache.lucene.document.*;
+import org.apache.lucene.geo.Polygon;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
@@ -43,10 +42,19 @@ public class LuceneWrapper {
 
     public void addTweet(IndexWriter writer, Tweet t) throws IOException {
         Document doc = new Document();
-        if(t.title != null)
-            doc.add(new TextField("title", t.title, TextField.Store.YES));
+
         doc.add(new TextField("text", t.text, TextField.Store.YES));
         doc.add(new StringField("id", t.id_str, TextField.Store.YES));
+        doc.add(new StringField("user", t.user.screen_name, TextField.Store.YES));
+
+        if(t.title != null)
+            doc.add(new TextField("title", t.title, TextField.Store.YES));
+        if(t.location != null) {
+            doc.add(new LatLonPoint("location", t.location.lat, t.location.lng));
+            doc.add(new StoredField("lat", t.location.lat));
+            doc.add(new StoredField("lng", t.location.lng));
+        }
+
         writer.addDocument(doc);
     }
 
@@ -65,6 +73,8 @@ public class LuceneWrapper {
     public static void printTweetDocument(Document tweet) {
         System.out.println("id: " + tweet.get("id"));
         System.out.println("text: " + tweet.get("text"));
+        System.out.println("user: " + tweet.get("user"));
         System.out.println("title: " + tweet.get("title"));
+        System.out.println("location: " + "<" + tweet.get("lat") + ", " + tweet.get("lng") + ">");
     }
 }
