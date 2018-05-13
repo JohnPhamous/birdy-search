@@ -1,6 +1,5 @@
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.*;
-import org.apache.lucene.geo.Polygon;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
@@ -13,11 +12,9 @@ import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
-import org.apache.lucene.store.RAMDirectory;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,6 +43,8 @@ public class LuceneWrapper {
         doc.add(new TextField("text", t.text, TextField.Store.YES));
         doc.add(new StringField("id", t.id_str, TextField.Store.YES));
         doc.add(new StringField("user", t.user.screen_name, TextField.Store.YES));
+        doc.add(new DoublePoint("time", t.timestamp));
+        doc.add(new StoredField("timestamp", t.timestamp_ms));
 
         if(t.title != null)
             doc.add(new TextField("title", t.title, TextField.Store.YES));
@@ -75,6 +74,7 @@ public class LuceneWrapper {
         System.out.println("text: " + tweet.get("text"));
         System.out.println("user: " + tweet.get("user"));
         System.out.println("title: " + tweet.get("title"));
+        System.out.println("timestamp: " + tweet.get("timestamp"));
         System.out.println("location: " + "<" + tweet.get("lat") + ", " + tweet.get("lng") + ">");
     }
 }

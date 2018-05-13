@@ -2,21 +2,25 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import org.apache.lucene.document.Document;
 
 public class Tweet {
     String id_str;
     String text;
-    String timestamp_ms;
     String title;
     Coordinates location;
     String geoJson;
     boolean truncated;
+    String timestamp_ms;
+    long timestamp;
     String created_at;
     String source;
     User user;
 
     public static Tweet parseTweet(String tweet) {
         Tweet t = new Gson().fromJson(tweet, Tweet.class);
+        t.timestamp = Long.parseLong(t.timestamp_ms);
+
         JsonParser parser = new JsonParser();
         JsonObject obj = parser.parse(tweet).getAsJsonObject();
 
@@ -53,6 +57,19 @@ public class Tweet {
         return t;
     }
 
+    public static Tweet fromDocument(Document tweet) {
+        Tweet t = new Tweet();
+
+        t.id_str = tweet.get("id");
+        t.text = tweet.get("text");
+        t.user = new User(tweet.get("user"));
+        t.title = tweet.get("title");
+        t.timestamp = Long.parseLong(tweet.get("timestamp"));
+        t.location = new Coordinates(Double.parseDouble(tweet.get("lat")), Double.parseDouble(tweet.get("lng")));
+
+        return t;
+    }
+
     public String toString() {
         StringBuilder s = new StringBuilder();
 
@@ -60,7 +77,7 @@ public class Tweet {
         s.append("text: " + text + "\n");
         s.append("title: " + title + "\n");
         s.append("truncated: " + truncated + "\n");
-        s.append("created_at: " + created_at + "\n");
+        s.append("timestamp: " + timestamp + "\n");
         s.append("source: " + source + "\n");
         s.append("location: " + location + "\n");
 
