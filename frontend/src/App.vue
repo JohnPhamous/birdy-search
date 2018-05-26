@@ -6,8 +6,8 @@
 </template>
 
 <script>
-import Home from './components/Home'
-import Particles from './components/Particles'
+import Home from './components/Home';
+import Particles from './components/Particles';
 
 export default {
   name: 'App',
@@ -15,7 +15,7 @@ export default {
     Home,
     Particles
   }
-}
+};
 </script>
 
 <style>
@@ -23,9 +23,6 @@ export default {
 @import url('https://fonts.googleapis.com/css?family=Lora');
 * {
   font-family: 'Istok Web', sans-serif;
-}
-p {
-  font-family: 'Lora', serif;
 }
 #app {
   width: 100%;
