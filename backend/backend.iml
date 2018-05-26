@@ -7,9 +7,9 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="org.apache.lucene:lucene-core:7.3.0" level="project" />
+    <orderEntry type="library" name="org.apache.lucene:lucene-core:7.3.1" level="project" />
     <orderEntry type="library" name="com.google.code.gson:gson:2.8.4" level="project" />
-    <orderEntry type="library" name="org.apache.lucene:lucene-queryparser:7.3.0" level="project" />
+    <orderEntry type="library" name="org.apache.lucene:lucene-queryparser:7.3.1" level="project" />
     <orderEntry type="library" name="org.springframework.boot:spring-boot-autoconfigure:2.0.2.RELEASE" level="project" />
     <orderEntry type="library" name="org.springframework.boot:spring-boot-starter-web:2.0.2.RELEASE" level="project" />
   </component>
