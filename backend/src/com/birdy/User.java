@@ -1,3 +1,5 @@
+package com.birdy;
+
 public class User {
     public String id;
     public String name;
@@ -11,7 +13,7 @@ public class User {
 
     @Override
     public String toString() {
-        return "User{" +
+        return "birdy.User{" +
                 "id='" + id + '\'' +
                 ", name='" + name + '\'' +
                 ", screen_name='" + screen_name + '\'' +

@@ -1,3 +1,5 @@
+package com.birdy;
+
 public class Coordinates {
     public double lat;
     public double lng;
