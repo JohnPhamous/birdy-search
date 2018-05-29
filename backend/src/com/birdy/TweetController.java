@@ -25,7 +25,7 @@ public class TweetController {
         return "Hello!";
     }
 
-    @RequestMapping("/tweets")
+    @RequestMapping(value = "/tweets", produces = "application/json; charset=utf-8")
     public String findTweets(@RequestParam(value = "q", required = false) String query,
                              @RequestParam(value = "limit", required = false) Integer limit,
                              @RequestParam(value = "lng", required = false) Double lng,
