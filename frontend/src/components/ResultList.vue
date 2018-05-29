@@ -2,6 +2,13 @@
   <div>
     <p><small>There are {{ results.length }} matches for <strong>{{ query }}</strong>.</small></p>
     <section class="results">
+      <plots
+        v-if="latitude && longitude"
+        :data="results" 
+        :centerLat="latitude"
+        :centerLng="longitude"
+        class="plots"
+      />
       <result
         v-for="r in results"
         :tweet="r"
@@ -14,11 +21,13 @@
 
 <script>
 import Result from './Result';
+import Plots from './Plots';
 
 export default {
-  props: ['results', 'query'],
+  props: ['results', 'query', 'latitude', 'longitude'],
   components: {
-    Result
+    Result,
+    Plots
   }
 };
 </script>
@@ -27,5 +36,8 @@ export default {
 .results {
   overflow: scroll;
   height: 60vh;
+}
+.plots {
+  margin-bottom: 30px;
 }
 </style>

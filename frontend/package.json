@@ -14,7 +14,8 @@
     "moment": "^2.22.1",
     "particles.js": "^2.0.0",
     "vue": "^2.5.2",
-    "vue-loading-spinner": "^1.0.11"
+    "vue-loading-spinner": "^1.0.11",
+    "vue2-google-maps": "^0.9.7"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",
