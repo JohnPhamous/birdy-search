@@ -1,6 +1,7 @@
 package com.birdy;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.LatLonPoint;
 import org.apache.lucene.queryparser.classic.ParseException;
@@ -41,20 +42,17 @@ public class TweetController {
             QueryBuilder qb = new QueryBuilder(lw.analyzer);
 
             BooleanQuery.Builder bq = new BooleanQuery.Builder();
-            if(query != null) {
+            if(query != null && query.length() > 0) {
                 Query baseQuery = new QueryParser("text", lw.analyzer).parse(query);
                 bq.add(baseQuery, BooleanClause.Occur.MUST);
             }
             if(lng != null && lat != null)
                 bq.add(LatLonPoint.newDistanceQuery("location", lat, lng, radius), BooleanClause.Occur.MUST);
 
+            TweetResponse response = lw.search(Main.indexReader, bq.build(), limit);
 
-            List<Document> docs = lw.search(Main.indexReader, bq.build(), limit);
-            List<Tweet> tweets = docs.stream()
-                    .map(Tweet::fromDocument)
-                    .collect(Collectors.toList());
             Gson gson = new Gson();
-            return gson.toJson(tweets);
+            return gson.toJson(response);
         } catch (IOException | ParseException e) {
             e.printStackTrace();
             return "Error";
