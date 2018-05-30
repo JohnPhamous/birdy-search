@@ -88,7 +88,6 @@ export default {
       }
 
       this.isLoading = false;
-      console.log(query);
 
       axios
         .get(query)

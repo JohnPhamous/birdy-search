@@ -50,6 +50,7 @@ export default {
           newTweet += `<strong>${token}</strong> `;
         } else if (token.includes('http')) {
           newTweet += `<a href="${token}">${token}</a>`;
+          newTweet += ` <small><em>(${this.tweet.title})</em></small>`;
         } else {
           newTweet += `${token} `;
         }

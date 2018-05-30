@@ -68,8 +68,6 @@ export default {
       center.lat = this.centerLat;
       center.lng = this.centerLng;
 
-      console.log(center);
-
       return center;
     }
   }

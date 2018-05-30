@@ -11,6 +11,8 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
+    "firebase-tools": "^3.18.5",
+    "global": "^4.3.2",
     "moment": "^2.22.1",
     "particles.js": "^2.0.0",
     "vue": "^2.5.2",
