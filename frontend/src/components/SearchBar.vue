@@ -6,7 +6,7 @@
 
         <div v-if="!results.length">
           <form v-on:submit.prevent="submitQuery" v-if="!isLoading">
-            <input type="text" v-model="query" placeholder="Twitter Search Query" />
+            <input type="text" v-model="query" placeholder="birds like cheese limit 25" />
             <b-button>Look Up</b-button>
             
             <div class="form-check">
@@ -14,6 +14,7 @@
               <label class="form-check-label" for="location">
                 Search Near You
               </label>
+
             </div>
           </form>
 
@@ -56,7 +57,8 @@ export default {
       longitude: '',
       latitude: '',
       results: [],
-      totalMatched: 0
+      totalMatched: 0,
+      numResults: 10
     };
   },
   methods: {
@@ -71,7 +73,15 @@ export default {
     submitQuery: function() {
       this.isLoading = true;
       let query = this.apiBase;
-      query += `q=${this.query}&limit=10`;
+
+      if (this.query.includes('limit')) {
+        const delim = this.query.split('limit');
+        this.numResults = delim[delim.length - 1];
+      } else {
+        this.numResults = 10;
+      }
+
+      query += `q=${this.query}&limit=${this.numResults}`;
 
       if (this.searchByLocation) {
         query += `&lat=${this.latitude}&lng=${this.longitude}`;

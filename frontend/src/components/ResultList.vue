@@ -1,6 +1,6 @@
 <template>
   <div>
-    <p><small>Showing {{ results.length }} out of {{ totalMatched }} matches for <strong>{{ query }}</strong>.</small></p>
+    <p><small>Showing {{ results.length }} out of {{ totalMatched }} matches for <strong>{{ query.split('limit')[0] }}</strong></small></p>
     <section class="results">
       <plots
         v-if="latitude && longitude"
