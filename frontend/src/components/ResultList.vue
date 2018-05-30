@@ -1,6 +1,6 @@
 <template>
   <div>
-    <p><small>There are {{ results.length }} matches for <strong>{{ query }}</strong>.</small></p>
+    <p><small>Showing {{ results.length }} out of {{ totalMatched }} matches for <strong>{{ query }}</strong>.</small></p>
     <section class="results">
       <plots
         v-if="latitude && longitude"
@@ -24,7 +24,7 @@ import Result from './Result';
 import Plots from './Plots';
 
 export default {
-  props: ['results', 'query', 'latitude', 'longitude'],
+  props: ['results', 'query', 'latitude', 'longitude', 'totalMatched'],
   components: {
     Result,
     Plots

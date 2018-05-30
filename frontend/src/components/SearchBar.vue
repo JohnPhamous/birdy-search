@@ -30,6 +30,7 @@
             :query="query"
             :latitude="latitude"
             :longitude="longitude"
+            :totalMatched="totalMatched"
           >
           </result-list>
         </div>
@@ -54,7 +55,8 @@ export default {
       searchByLocation: false,
       longitude: '',
       latitude: '',
-      results: []
+      results: [],
+      totalMatched: 0
     };
   },
   methods: {
@@ -81,7 +83,8 @@ export default {
       axios
         .get(query)
         .then(response => {
-          this.results = response.data;
+          this.results = response.data.tweets;
+          this.totalMatched = response.data.numResponses;
           this.isLoading = false;
         })
         .catch(error => {
