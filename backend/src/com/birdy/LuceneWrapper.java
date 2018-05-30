@@ -19,6 +19,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class LuceneWrapper {
     public StandardAnalyzer analyzer;
@@ -59,7 +60,7 @@ public class LuceneWrapper {
         writer.addDocument(doc);
     }
 
-    public List<Document> search(IndexReader reader, Query q, int numResults) throws IOException, ParseException {
+    public TweetResponse search(IndexReader reader, Query q, int numResults) throws IOException, ParseException {
         IndexSearcher searcher = new IndexSearcher(reader);
         TopDocs topDocs = searcher.search(q, numResults);
 
@@ -67,10 +68,15 @@ public class LuceneWrapper {
         for(ScoreDoc doc : topDocs.scoreDocs) {
             docList.add(searcher.doc(doc.doc));
         }
-        return docList;
+        List<Tweet> tweets = docList
+                .stream()
+                .map(Tweet::fromDocument)
+                .collect(Collectors.toList());
+        TweetResponse response = new TweetResponse(tweets, topDocs.totalHits);
+        return response;
     }
 
-    public List<Document> search(IndexReader reader, String query, int numResults) throws IOException, ParseException {
+    public TweetResponse search(IndexReader reader, String query, int numResults) throws IOException, ParseException {
         Query q = new QueryParser("text", analyzer).parse(query);
         return search(reader, q, numResults);
     }
