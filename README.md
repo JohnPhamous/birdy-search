@@ -1,25 +1,26 @@
 # Birdy
 
-> A script to save geotagged tweets
+> A web app to index and search Twitter Tweets 
 
-## Set Up
+[Demo Link](http://birdysearch.com/)
 
-To run the script, first `cd` into the project directory and install the required modules with:
-    
-    npm install
+## Architecture
 
-Then, you will need to create a Twitter app to authenticate with Twitter via OAuth to get the tweets. Update `config/default.js` with your information.
+Birdy is split into 3 parts:
 
-Finally, start the application with:
+* Birdy Gather
+* Birdy Frontend
+* Birdy Lucene
 
-    npm start
+## Birdy Gather
 
-To view debugging logs, set the `DEBUG` environmental variable to `birdy`.
+Birdy Gather is a Node program that uses the Twitter streaming API and stores geotagged Tweets. If a Tweet contains a URL, then Birdy Gather will visit the page and fetch the metadata of that page. To ensure speed, we use a Master/Slave architecture. The master gathers the Tweets and will either write the Tweet directly to disk or pass on the Tweet to a slave for the slave to gather the URLs metadata.
 
-## Running the Birdy
 
-You can start Birdy by using `npm run prod`. This will run Birdy with the default configuration. You can also pass in CLI arguments to modify the default configuration or modify `config/default.js` directly.
+To use Birdy Gather, go inside `gather-tweets` and type `npm install`. Afterward, type in `npm run prod`.
 
-### Example of using the CLI Arguments
+## Birdy Frontend
 
-`npm run prod --dir=path --totalsize=1000`
+Birdy Frontend is built using Vue.js. It supports searching for Tweets around a location, highlighting matched terms, and hyperlinking URLs and user references. 
+
+## Birdy Lucene
