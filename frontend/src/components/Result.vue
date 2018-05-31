@@ -25,6 +25,10 @@
 </template>
 
 <script>
+import Snowball from 'snowball';
+const stemmer = new Snowball('English');
+console.log(stemmer);
+
 export default {
   props: ['tweet', 'query'],
   computed: {
@@ -38,16 +42,28 @@ export default {
     },
     getTweetBody() {
       const tweet = this.tweet.text;
-      const tokens = tweet.split(' ');
+      const tokens = tweet.split(/[\s,]+/);
+      console.log(tokens);
 
       let newTweet = '';
 
       tokens.forEach(token => {
+        stemmer.setCurrent(token);
+        stemmer.stem();
+        const currentTokenStem = stemmer.getCurrent().toLowerCase();
+
+        stemmer.setCurrent(this.query.toLowerCase());
+        stemmer.stem();
+
+        const currentQuery = stemmer.getCurrent().toLowerCase();
+
+        console.log('Query: ' + currentQuery, 'Token: ' + currentTokenStem);
+
         if (
-          token.substr(0, this.query.length).toLowerCase() ===
-          this.query.toLowerCase()
+          token.substr(0, this.query.length).toLowerCase() === currentQuery ||
+          currentQuery === currentTokenStem
         ) {
-          newTweet += `<strong>${token}</strong> `;
+          newTweet += `<strong style="background: #afd1f6; padding: 0px 5px;">${token}</strong> `;
         } else if (token.includes('http')) {
           newTweet += `<a href="${token}">${token}</a>`;
           newTweet += ` <small><em>(${this.tweet.title})</em></small>`;
@@ -56,8 +72,8 @@ export default {
         }
       });
       return newTweet;
-    }
-  }
+    },
+  },
 };
 </script>
 
