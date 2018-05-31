@@ -72,6 +72,8 @@ export default {
         } else if (token.includes('http')) {
           newTweet += `<a href="${token}">${token}</a>`;
           newTweet += ` <small><em>(${this.tweet.title})</em></small>`;
+        } else if (token.includes('@')) {
+          newTweet += `<a href="http://twitter.com/${token}" target="_blank">${token}</a> `;
         } else {
           newTweet += `${token} `;
         }
