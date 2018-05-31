@@ -27,7 +27,7 @@
 <script>
 import Snowball from 'snowball';
 const stemmer = new Snowball('English');
-console.log(stemmer);
+//console.log(stemmer);
 
 export default {
   props: ['tweet', 'query'],
@@ -43,7 +43,7 @@ export default {
     getTweetBody() {
       const tweet = this.tweet.text;
       const tokens = tweet.split(/[\s,]+/);
-      console.log(tokens);
+      //console.log(tokens);
 
       let newTweet = '';
 
@@ -52,12 +52,17 @@ export default {
         stemmer.stem();
         const currentTokenStem = stemmer.getCurrent().toLowerCase();
 
-        stemmer.setCurrent(this.query.toLowerCase());
+        stemmer.setCurrent(this.query.split('limit')[0].toLowerCase());
         stemmer.stem();
 
         const currentQuery = stemmer.getCurrent().toLowerCase();
 
-        console.log('Query: ' + currentQuery, 'Token: ' + currentTokenStem);
+        /*console.log(
+          'Query: ' + this.query.split('limit')[0],
+          'QueryStem: ' + currentQuery,
+          'Token: ' + token,
+          'TokenStem: ' + currentTokenStem,
+        );*/
 
         if (
           token.substr(0, this.query.length).toLowerCase() === currentQuery ||

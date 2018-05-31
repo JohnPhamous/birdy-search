@@ -8,7 +8,7 @@
           <form v-on:submit.prevent="submitQuery" v-if="!isLoading">
             <input type="text" v-model="query" placeholder="birds like cheese limit 25" />
             <b-button>Look Up</b-button>
-            
+
             <div class="form-check">
               <input class="form-check-input" type="checkbox" @click="getLocation" v-model="searchByLocation" id="location">
               <label class="form-check-label" for="location">
@@ -58,7 +58,7 @@ export default {
       latitude: '',
       results: [],
       totalMatched: 0,
-      numResults: 10
+      numResults: 10,
     };
   },
   methods: {
@@ -98,6 +98,7 @@ export default {
         })
         .catch(error => {
           this.results = error;
+          console.log('No matches');
         });
     },
     cancelSearch: function() {
@@ -109,13 +110,13 @@ export default {
       this.latitude = '';
       this.longitude = '';
       this.searchByLocation = false;
-    }
+    },
   },
   components: {
     ResultList,
     LoadingIcon,
-    BButton
-  }
+    BButton,
+  },
 };
 </script>
 
