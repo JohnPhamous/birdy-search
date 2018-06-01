@@ -6,7 +6,7 @@
 
         <div v-if="!results.length">
           <form v-on:submit.prevent="submitQuery" v-if="!isLoading">
-            <input type="text" v-model="query" placeholder="birds like cheese limit 25" />
+            <input id="query" type="text" v-model="query" placeholder="birds like cheese limit 25" />
             <b-button>Look Up</b-button>
 
             <div class="form-check">
@@ -143,6 +143,23 @@ export default {
   justify-content: center;
   padding: 50px 100px;
   align-items: center;
+}
+
+@media (max-width: 800px) {
+  .card {
+    padding: 25px 50px;
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+  #query {
+    width: inherit !important;
+    margin-top: 50px;
+    margin-bottom: 25px;
+  }
+  .form-check {
+    text-align: center !important;
+    margin-top: 20px;
+  }
 }
 .apply-opacity {
   opacity: 0.8;
