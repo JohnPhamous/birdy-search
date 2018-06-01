@@ -14,9 +14,15 @@
               <label class="form-check-label" for="location">
                 Search Near You
               </label>
-
             </div>
           </form>
+
+          <div
+            v-if="showError"
+            class="error"
+          >
+            No results found for {{ query }}
+          </div>
 
           <div v-if="isLoading">
             Searching for: {{ query }}
@@ -59,6 +65,7 @@ export default {
       results: [],
       totalMatched: 0,
       numResults: 10,
+      showError: false
     };
   },
   methods: {
@@ -71,6 +78,7 @@ export default {
       }
     },
     submitQuery: function() {
+      this.showError = false;
       this.isLoading = true;
       let query = this.apiBase;
 
@@ -95,6 +103,10 @@ export default {
           this.results = response.data.tweets;
           this.totalMatched = response.data.numResponses;
           this.isLoading = false;
+          if (this.results.length == 0) {
+            console.log('No results');
+            this.showError = true;
+          }
         })
         .catch(error => {
           this.results = error;
@@ -110,13 +122,14 @@ export default {
       this.latitude = '';
       this.longitude = '';
       this.searchByLocation = false;
-    },
+      this.showError = false;
+    }
   },
   components: {
     ResultList,
     LoadingIcon,
-    BButton,
-  },
+    BButton
+  }
 };
 </script>
 
@@ -161,5 +174,11 @@ export default {
 }
 .form-check {
   text-align: right;
+}
+.error {
+  margin-top: 30px;
+  background: #f66c;
+  font-weight: 800;
+  padding: 10px 20px;
 }
 </style>
