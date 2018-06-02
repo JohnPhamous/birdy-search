@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.LatLonPoint;
+import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.BooleanClause;
@@ -15,7 +16,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -43,7 +46,13 @@ public class TweetController {
 
             BooleanQuery.Builder bq = new BooleanQuery.Builder();
             if(query != null && query.length() > 0) {
-                Query baseQuery = new QueryParser("text", lw.analyzer).parse(query);
+                String[] fields = {"title", "text", "user"};
+                Map<String, Float> boosts = new HashMap<>() {{
+                    put("title", 2.0f);
+                    put("text", 1.0f);
+                    put("user", 2.5f);
+                }};
+                Query baseQuery = new MultiFieldQueryParser(fields, lw.analyzer, boosts).parse(query);
                 bq.add(baseQuery, BooleanClause.Occur.MUST);
             }
             if(lng != null && lat != null)
