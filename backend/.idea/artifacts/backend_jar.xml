@@ -43,6 +43,7 @@
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/apache/lucene/lucene-queryparser/7.3.1/lucene-queryparser-7.3.1.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/apache/lucene/lucene-queries/7.3.1/lucene-queries-7.3.1.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/apache/lucene/lucene-sandbox/7.3.1/lucene-sandbox-7.3.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/apache/lucene/lucene-analyzers-common/7.3.1/lucene-analyzers-common-7.3.1.jar" path-in-jar="/" />
     </root>
   </artifact>
 </component>
