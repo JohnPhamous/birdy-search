@@ -26,11 +26,13 @@ public class Main {
 
         if(indexDir.isDirectory() && indexDir.listFiles().length == 0) {
             try(IndexWriter iw = luceneWrapper.createIndexWriter()) {
-                for(File f : dataDir.listFiles()) {
+                File[] files = dataDir.listFiles();
+                for(int i = 0; i < files.length; ++i) {
+                    File f = files[i];
                     String fileName = f.getName();
                     if(!fileName.substring(fileName.lastIndexOf(".") + 1).equals("json"))
                         continue;
-                    System.out.println("Processing: " + f.getName());
+                    System.out.println("Processing: " + f.getName() + " (" + i + "/" + files.length + ")");
                     addTweetsFromFile(luceneWrapper, iw, f);
                 }
             }
