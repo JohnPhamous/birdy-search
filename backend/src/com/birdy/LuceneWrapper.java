@@ -1,5 +1,8 @@
 package com.birdy;
 
+import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.core.KeywordAnalyzer;
+import org.apache.lucene.analysis.miscellaneous.PerFieldAnalyzerWrapper;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.*;
 import org.apache.lucene.index.DirectoryReader;
@@ -18,16 +21,21 @@ import org.apache.lucene.store.FSDirectory;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class LuceneWrapper {
-    public StandardAnalyzer analyzer;
+    public Analyzer analyzer;
     protected Directory index;
     protected IndexWriterConfig config;
 
     public LuceneWrapper(File indexDir) throws IOException {
-        analyzer = new StandardAnalyzer();
+        Map<String,Analyzer> analyzerPerField = new HashMap<>() {{
+            put("hashtags", new KeywordAnalyzer());
+        }};
+        analyzer = new PerFieldAnalyzerWrapper(new StandardAnalyzer(), analyzerPerField);
         index = FSDirectory.open(indexDir.toPath());
         config = new IndexWriterConfig(analyzer);
     }
@@ -48,6 +56,12 @@ public class LuceneWrapper {
         doc.add(new StringField("user", t.user.screen_name, TextField.Store.YES));
         doc.add(new DoublePoint("time", t.timestamp));
         doc.add(new StoredField("timestamp", t.timestamp_ms));
+
+        if(t.entities != null && t.entities.hashtags != null) {
+            for(HashTag hashtag : t.entities.hashtags) {
+                doc.add(new StringField("hashtags", '#' + hashtag.text, TextField.Store.YES));
+            }
+        }
 
         if(t.title != null)
             doc.add(new TextField("title", t.title, TextField.Store.YES));
@@ -88,5 +102,6 @@ public class LuceneWrapper {
         System.out.println("title: " + tweet.get("title"));
         System.out.println("timestamp: " + tweet.get("timestamp"));
         System.out.println("location: " + "<" + tweet.get("lat") + ", " + tweet.get("lng") + ">");
+        System.out.println("hashtags: " + tweet.get("hashtags"));
     }
 }

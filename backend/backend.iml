@@ -12,5 +12,6 @@
     <orderEntry type="library" name="org.apache.lucene:lucene-queryparser:7.3.1" level="project" />
     <orderEntry type="library" name="org.springframework.boot:spring-boot-autoconfigure:2.0.2.RELEASE" level="project" />
     <orderEntry type="library" name="org.springframework.boot:spring-boot-starter-web:2.0.2.RELEASE" level="project" />
+    <orderEntry type="library" name="org.apache.lucene:lucene-analyzers-common:7.3.1" level="project" />
   </component>
 </module>

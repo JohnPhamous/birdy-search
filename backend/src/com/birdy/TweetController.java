@@ -42,15 +42,15 @@ public class TweetController {
             // Set radius equal to 100 miles if not set
             if(radius == null) radius = 160934;
 
-            QueryBuilder qb = new QueryBuilder(lw.analyzer);
-
             BooleanQuery.Builder bq = new BooleanQuery.Builder();
+
             if(query != null && query.length() > 0) {
-                String[] fields = {"title", "text", "user"};
+                String[] fields = {"title", "text", "user", "hashtags"};
                 Map<String, Float> boosts = new HashMap<>() {{
                     put("title", 2.0f);
                     put("text", 1.0f);
                     put("user", 2.5f);
+                    put("hashtags", 2.0f);
                 }};
                 Query baseQuery = new MultiFieldQueryParser(fields, lw.analyzer, boosts).parse(query);
                 bq.add(baseQuery, BooleanClause.Occur.MUST);

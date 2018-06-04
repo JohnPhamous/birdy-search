@@ -5,6 +5,11 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.apache.lucene.document.Document;
+import org.apache.lucene.index.IndexableField;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class Tweet {
     String id_str;
@@ -18,6 +23,9 @@ public class Tweet {
     String created_at;
     String source;
     User user;
+    Entities entities;
+    List<String> hashtags;
+
 
     public static Tweet parseTweet(String tweet) {
         Tweet t = new Gson().fromJson(tweet, Tweet.class);
@@ -69,6 +77,11 @@ public class Tweet {
         t.timestamp = Long.parseLong(tweet.get("timestamp"));
         t.location = new Coordinates(Double.parseDouble(tweet.get("lat")), Double.parseDouble(tweet.get("lng")));
 
+        IndexableField[] hashtags = tweet.getFields("hashtags");
+        t.hashtags = Arrays.stream(hashtags)
+            .map(field -> field.stringValue())
+            .collect(Collectors.toList());
+
         return t;
     }
 
@@ -82,6 +95,14 @@ public class Tweet {
         s.append("timestamp: " + timestamp + "\n");
         s.append("source: " + source + "\n");
         s.append("location: " + location + "\n");
+        s.append("hashtags: ");
+
+        if(entities != null && entities.hashtags != null) {
+            s.append(entities.hashtags.stream()
+                    .map(h -> "#" + h.text)
+                    .collect(Collectors.joining(", ")));
+        }
+        s.append("\n");
 
         return s.toString();
     }
