@@ -18,6 +18,17 @@
       <div class="card-body">
         <blockquote class="blockquote mb-0">
           <p v-html="getTweetBody"></p>
+          <div>
+            <span
+              v-if="tweet.hashtags"
+              v-for="h in tweet.hashtags"
+              :key="h"
+              :style="{ background: stringToColor(h) }"
+              class="hashtag"
+            >
+              {{ h }}
+            </span>
+          </div>
         </blockquote>
       </div>
     </div>
@@ -27,7 +38,6 @@
 <script>
 import Snowball from 'snowball';
 const stemmer = new Snowball('English');
-//console.log(stemmer);
 
 export default {
   props: ['tweet', 'query'],
@@ -63,7 +73,6 @@ export default {
           'Token: ' + token,
           'TokenStem: ' + currentTokenStem,
         );*/
-
         if (
           token.substr(0, this.query.length).toLowerCase() === currentQuery ||
           currentQuery === currentTokenStem
@@ -75,12 +84,30 @@ export default {
         } else if (token.includes('@')) {
           newTweet += `<a href="http://twitter.com/${token}" target="_blank">${token}</a> `;
         } else {
-          newTweet += `${token} `;
+          if (token === '@') {
+            newTweet += `${token}`;
+          } else {
+            newTweet += `${token} `;
+          }
         }
       });
       return newTweet;
-    },
+    }
   },
+  methods: {
+    stringToColor(str) {
+      var hash = 0;
+      for (var i = 0; i < str.length; i++) {
+        hash = str.charCodeAt(i) + ((hash << 5) - hash);
+      }
+      var colour = '#';
+      for (var i = 0; i < 3; i++) {
+        var value = (hash >> (i * 8)) & 0xff;
+        colour += ('00' + value.toString(16)).substr(-2);
+      }
+      return colour;
+    }
+  }
 };
 </script>
 
@@ -97,5 +124,9 @@ p {
 .date {
   float: right;
   font-size: 15px;
+}
+.hashtag {
+  padding: 3px 6px;
+  margin-left: 10px;
 }
 </style>
