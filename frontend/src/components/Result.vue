@@ -25,7 +25,7 @@
               :key="h"
               :style="{ background: stringToColor(h) }"
               class="hashtag"
-              :href="`https://twitter.com/hashtag/${h}`"
+              :href="`https://twitter.com/hashtag/${h.substr(1,h.length - 1)}`"
               target="_blank"
             >
               {{ h }}

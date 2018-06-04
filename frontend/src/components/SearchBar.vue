@@ -79,6 +79,7 @@ export default {
     },
     submitQuery: function() {
       this.showError = false;
+      console.log('fetching');
       this.isLoading = true;
       let query = this.apiBase;
 
@@ -89,13 +90,11 @@ export default {
         this.numResults = 10;
       }
 
-      query += `q=${this.query}&limit=${this.numResults}`;
+      query += `q=${encodeURIComponent(this.query)}&limit=${this.numResults}`;
 
       if (this.searchByLocation) {
         query += `&lat=${this.latitude}&lng=${this.longitude}`;
       }
-
-      this.isLoading = false;
 
       axios
         .get(query)
