@@ -19,15 +19,17 @@
         <blockquote class="blockquote mb-0">
           <p v-html="getTweetBody"></p>
           <div>
-            <span
+            <a
               v-if="tweet.hashtags"
               v-for="h in tweet.hashtags"
               :key="h"
               :style="{ background: stringToColor(h) }"
               class="hashtag"
+              :href="`https://twitter.com/hashtag/${h}`"
+              target="_blank"
             >
               {{ h }}
-            </span>
+            </a>
           </div>
         </blockquote>
       </div>
@@ -128,5 +130,7 @@ p {
 .hashtag {
   padding: 3px 6px;
   margin-left: 10px;
+  color: black;
+  text-align: center;
 }
 </style>
