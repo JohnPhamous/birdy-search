@@ -33,6 +33,7 @@ public class LuceneWrapper {
 
     public LuceneWrapper(File indexDir) throws IOException {
         Map<String,Analyzer> analyzerPerField = new HashMap<>() {{
+            put("user", new KeywordAnalyzer());
             put("hashtags", new KeywordAnalyzer());
         }};
         analyzer = new PerFieldAnalyzerWrapper(new StandardAnalyzer(), analyzerPerField);
