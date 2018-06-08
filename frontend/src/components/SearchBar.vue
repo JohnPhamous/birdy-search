@@ -79,7 +79,6 @@ export default {
     },
     submitQuery: function() {
       this.showError = false;
-      console.log('fetching');
       this.isLoading = true;
       let query = this.apiBase;
 
@@ -95,6 +94,8 @@ export default {
       if (this.searchByLocation) {
         query += `&lat=${this.latitude}&lng=${this.longitude}`;
       }
+
+      query += `&offset=0 `;
 
       axios
         .get(query)
