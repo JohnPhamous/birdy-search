@@ -1,7 +1,5 @@
 package com.birdy;
 
-import com.google.gson.JsonObject;
-
 import java.util.List;
 
 public class TweetResponse {

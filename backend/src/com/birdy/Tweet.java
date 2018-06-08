@@ -22,6 +22,7 @@ public class Tweet {
     long timestamp;
     String created_at;
     String source;
+    String quoted_status_id_str;
     User user;
     Entities entities;
     List<String> hashtags;
