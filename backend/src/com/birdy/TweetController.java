@@ -34,6 +34,7 @@ public class TweetController {
                              @RequestParam(value = "limit", required = false) Integer limit,
                              @RequestParam(value = "lng", required = false) Double lng,
                              @RequestParam(value = "lat", required = false) Double lat,
+                             @RequestParam(value = "offset", required = false) Integer offset,
                              @RequestParam(value = "radius", required = false) Integer radius) {
 
         try {
@@ -41,6 +42,7 @@ public class TweetController {
             if(limit == null) limit = 10;
             // Set radius equal to 100 miles if not set
             if(radius == null) radius = 160934;
+            if(offset == null) offset = 0;
 
             BooleanQuery.Builder bq = new BooleanQuery.Builder();
 
@@ -58,7 +60,7 @@ public class TweetController {
             if(lng != null && lat != null)
                 bq.add(LatLonPoint.newDistanceQuery("location", lat, lng, radius), BooleanClause.Occur.MUST);
 
-            TweetResponse response = lw.search(Main.indexReader, bq.build(), limit);
+            TweetResponse response = lw.search(Main.indexReader, bq.build(), limit, offset);
 
             Gson gson = new Gson();
             return gson.toJson(response);

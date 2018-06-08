@@ -11,10 +11,7 @@ import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.queryparser.classic.QueryParser;
-import org.apache.lucene.search.IndexSearcher;
-import org.apache.lucene.search.Query;
-import org.apache.lucene.search.ScoreDoc;
-import org.apache.lucene.search.TopDocs;
+import org.apache.lucene.search.*;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 
@@ -75,9 +72,11 @@ public class LuceneWrapper {
         writer.addDocument(doc);
     }
 
-    public TweetResponse search(IndexReader reader, Query q, int numResults) throws IOException, ParseException {
+    public TweetResponse search(IndexReader reader, Query q, int numResults, int offset) throws IOException, ParseException {
         IndexSearcher searcher = new IndexSearcher(reader);
-        TopDocs topDocs = searcher.search(q, numResults);
+        TopScoreDocCollector collector = TopScoreDocCollector.create(1000);
+        searcher.search(q, collector);
+        TopDocs topDocs = collector.topDocs(offset, numResults);
 
         List<Document> docList = new ArrayList<>();
         for(ScoreDoc doc : topDocs.scoreDocs) {
@@ -91,10 +90,10 @@ public class LuceneWrapper {
         return response;
     }
 
-    public TweetResponse search(IndexReader reader, String query, int numResults) throws IOException, ParseException {
-        Query q = new QueryParser("text", analyzer).parse(query);
-        return search(reader, q, numResults);
-    }
+//    public TweetResponse search(IndexReader reader, String query, int numResults) throws IOException, ParseException {
+//        Query q = new QueryParser("text", analyzer).parse(query);
+//        return search(reader, q, numResults);
+//    }
 
     public static void printTweetDocument(Document tweet) {
         System.out.println("id: " + tweet.get("id"));
