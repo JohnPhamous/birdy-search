@@ -88,7 +88,7 @@ export default {
     changePageByOne(offset) {
       if (
         this.currentPage + offset == 0 ||
-        this.currentPage / 10 + offset > this.getNumPages
+        this.currentPage + offset > this.getNumPages
       ) {
         return;
       } else {
@@ -128,6 +128,7 @@ export default {
   margin-top: 20px;
   display: flex;
   align-items: center;
+  justify-content: center;
 }
 .pagination-btn {
   border: none;
